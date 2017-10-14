@@ -79,7 +79,7 @@ def get_correlate_statement(free_rooms):
     free_rooms_list = free_rooms.split(",")
     last_room = free_rooms_list[-1]
     free_rooms_list.remove(last_room)
-    return statement("Sure, the {0} and {1} rooms are now available.".format(",".join(free_rooms_list), last_room))
+    return statement("Sure, the {0}, and {1} rooms are now available.".format(",".join(free_rooms_list), last_room))
 
 
 @ask.intent("HowManyPeopleIntent", mapping={'room_name': 'Room'})
