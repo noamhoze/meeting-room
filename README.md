@@ -13,7 +13,7 @@ This is an Alexa server for "meeting room" app using Walabot and Alexa.
  * Run `ngrok http 5000`
  * Copy the URL output from the previous step and use it in the configuration tabe at https://developer.amazon.com.
  
-## Testing without Walabot##
+## Testing without Walabot ##
  * Go to repo folder
  * Run `import json, socket`
  * Run `s = socket.socket()`
