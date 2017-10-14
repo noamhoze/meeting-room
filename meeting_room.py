@@ -5,11 +5,11 @@ Export The flask app that will communicates with alexa.
 
 from flask import Flask
 from flask_ask import Ask, statement
-from flask_ask import question
 from tinydb import Query
 
 from DBHandler import DBHandler as TinyDB
 from config import ROOMS_DATA_TABLE, DB_PATH, NUMBER_OF_PEOPLE_FIELD, ROOM_FIELD, ROOMS_NAMES_LIST
+from utils import check_if_room_exists
 
 app = Flask(__name__)
 ask = Ask(app, '/')
@@ -52,9 +52,10 @@ def find_me_a_room(requested_number_of_people):
 
 
 @ask.intent("IsRoomFreeIntent", mapping={'room_name': 'Room'})
+@check_if_room_exists
 def is_a_room_free(room_name):
     """
-    The handler for the IdRoomFreeIntent, it will return if a certain room is available or not.
+    The handler for the IsRoomFreeIntent, it will return if a certain room is available or not.
     :param room_name: The room's name to check if its available or not.
     :type room_name: C{str}
     :return: The statement corresponding to if the room given in the argument is available or not, if there is no
@@ -87,6 +88,7 @@ def get_correlate_statement(free_rooms):
 
 
 @ask.intent("HowManyPeopleIntent", mapping={'room_name': 'Room'})
+@check_if_room_exists
 def how_many_people_in_room(room_name):
     """
     Check how many people are the in the given room name.
