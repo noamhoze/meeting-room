@@ -29,8 +29,8 @@ class FreeRoomsServer:
     :type server_socket: C{socket.socket}
     :ivar free_rooms_db: The db to insert all the values gotten from the Walabot app
     :type free_rooms_db: L{tinydb.TinyDB}
-    :ivar query_obj: The Query object for doing queries in the TinyDB object.
-    :type query_obj: L{tinydb.Query}
+    :ivar room: The Query object for doing queries in the TinyDB object.
+    :type room: L{tinydb.Query}
     :ivar connections: The queue to insert to the new connections.
     :type connections: C{SharedList}
     """
@@ -48,22 +48,22 @@ class FreeRoomsServer:
         self.server_socket.bind(self.server_address)
         self.server_socket.listen(BACKLOG)
         self.free_rooms_db = TinyDB(DB_PATH, default_table=ROOMS_DATA_TABLE)
-        self.query_obj = Query()
+        self.room = Query()
         self.connections = []
 
     def start(self):
         """
         The function that will start the server, start a thread that will listen to any clients' connections.
-            Also we start a thread that will start a thread to any accepted client.
+            Also we start a thread that will handle all the clients.
         """
         print("Start server functionality, listen on address: {0}".format(self.server_address))
-        connections_thread = Thread(target=self.accept_connection)
+        connections_thread = Thread(target=self.accept_connections)
         connections_thread.start()
         print("Start handling clients.")
         handle_clients_thread = Thread(target=self.handle_clients)
         handle_clients_thread.start()
 
-    def accept_connection(self):
+    def accept_connections(self):
         """
         Will accept connection and insert them into a shared queue.
         """
@@ -106,14 +106,14 @@ class FreeRoomsServer:
                 data = json.loads(msg)
                 print("Got {0} from client {1}".format(data, address))
                 # If there isn't a room row in the db, so we insert the row.
-                if not self.free_rooms_db.search(self.query_obj.name == data[ROOM_FIELD]):
+                if not self.free_rooms_db.search(self.room.name == data[ROOM_FIELD]):
                     print("Inserting new row.")
                     self.free_rooms_db.insert(data)
                 # Update the existing row with the new data.
                 else:
                     print("Updating room with new data, number of people is: {0}".format(data[NUMBER_OF_PEOPLE_FIELD]))
                     self.free_rooms_db.update({NUMBER_OF_PEOPLE_FIELD: data[NUMBER_OF_PEOPLE_FIELD]},
-                                              self.query_obj.name == data[ROOM_FIELD])
+                                              self.room.name == data[ROOM_FIELD])
         except socket.error:
             self.handle_connection_close(client_connection, address)
 
