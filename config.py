@@ -17,3 +17,4 @@ PORT = 9999
 
 # General config
 UTF_FORMAT = 'UTF-8'
+ROOMS_NAMES_LIST = ["yellow", "blue", "green", "purple"]

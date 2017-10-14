@@ -9,7 +9,7 @@ from flask_ask import question
 from tinydb import Query
 
 from DBHandler import DBHandler as TinyDB
-from config import ROOMS_DATA_TABLE, DB_PATH, NUMBER_OF_PEOPLE_FIELD, ROOM_FIELD
+from config import ROOMS_DATA_TABLE, DB_PATH, NUMBER_OF_PEOPLE_FIELD, ROOM_FIELD, ROOMS_NAMES_LIST
 
 app = Flask(__name__)
 ask = Ask(app, '/')
@@ -95,6 +95,8 @@ def how_many_people_in_room(room_name):
     :return: The answer with the number of people that's are in the room.
     :rtype: C{flask_ask.statement}
     """
+    if room_name not in ROOMS_NAMES_LIST:
+        return statement("There is no such room named {0}".format(room_name))
     room_row = db.get(room.name == room_name)
     if room_row is None:
         return statement("I'm sorry, I am not getting information from the {0} room. Please check if Wala-bot"
