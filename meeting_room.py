@@ -66,9 +66,6 @@ def is_a_room_free(room_name):
     return statement("The {0} room is not available at the moment.".format(room_name))
 
 
-# How many people are in the {room_name} room??
-
-
 def get_correlate_statement(free_rooms):
     """
     Get the statement according to the free_rooms argument, it could be one room or more.
@@ -83,6 +80,26 @@ def get_correlate_statement(free_rooms):
     last_room = free_rooms_list[-1]
     free_rooms_list.remove(last_room)
     return statement("Sure, the {0} and {1} rooms are now available.".format(",".join(free_rooms_list), last_room))
+
+
+@ask.intent("HowManyPeopleIntent", mapping={'room_name': 'Room'})
+def how_many_people_in_room(room_name):
+    """
+    Check how many people are the in the given room name.
+    :param room_name: The room_name to check how many people in it.
+    :type room_name: C{str}
+    :return: The answer with the number of people that's are in the room.
+    :rtype: C{flask_ask.statement}
+    """
+    room_row = db.get(room.name == room_name)
+    if room_row is None:
+        return statement("I'm sorry, I am not getting information from the {0} room. Please check if Wala-bot"
+                         "is installed there.".format(room_name))
+    if room_row[NUMBER_OF_PEOPLE_FIELD] == 1:
+        return statement("There is currently {0} person in the {1} room"
+                         .format(room_row[NUMBER_OF_PEOPLE_FIELD], room_name))
+    return statement("There are currently {0} people in the {1} room"
+                     .format(room_row[NUMBER_OF_PEOPLE_FIELD], room_name))
 
 
 @ask.launch
