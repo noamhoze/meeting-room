@@ -1,3 +1,9 @@
+## Questions you can ask Alexa ##
+* Alexa, meeting room
+* Alexa, search meeting room for 3 people
+* Alexa, ask meeting room how many people are in the yellow room
+* Alexa, ask meeting room if the yellow room is free/available
+
 ## Steps for starting the app ##
  * Run 'python main.py'
  * Running 'ngrok http 5000'
