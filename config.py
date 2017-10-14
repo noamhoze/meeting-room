@@ -4,6 +4,7 @@ General configuration for the project.
 
 # DB related config
 NUMBER_OF_PEOPLE_FIELD = 'number_of_people'
+MAX_PEOPLE_FIELD = "max_people"
 ROOM_FIELD = "name"
 ROOMS_DATA_TABLE = "rooms_data"
 # TODO: To be configured to the db path.

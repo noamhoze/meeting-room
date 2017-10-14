@@ -5,6 +5,7 @@ Export The flask app that will communicates with alexa.
 
 from flask import Flask
 from flask_ask import Ask, statement
+from flask_ask import question
 from tinydb import Query
 
 from DBHandler import DBHandler as TinyDB
@@ -42,9 +43,12 @@ def find_me_a_room(requested_number_of_people):
     :return: The statement with all the available rooms.
     :rtype: C{flask_ask.statement}
     """
-    free_rooms = get_free_rooms(requested_number_of_people)
-    return statement("Sorry, there are no available rooms for {0} people at the moment."
-                     .format(requested_number_of_people)) if free_rooms is None else get_correlate_statement(free_rooms)
+    try:
+        free_rooms = get_free_rooms(requested_number_of_people)
+        return statement("Sorry, there are no available rooms for {0} people at the moment."
+                         .format(requested_number_of_people)) if free_rooms is None else get_correlate_statement(free_rooms)
+    except TypeError:
+        return statement("Sorry, I didn't get it.")
 
 
 @ask.intent("IsRoomFreeIntent", mapping={'room_name': 'Room'})

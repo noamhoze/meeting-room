@@ -10,7 +10,7 @@ from threading import Thread
 from tinydb import Query
 
 from DBHandler import DBHandler as TinyDB
-from config import DB_PATH, UTF_FORMAT, ROOM_FIELD, NUMBER_OF_PEOPLE_FIELD, ROOMS_DATA_TABLE
+from config import DB_PATH, UTF_FORMAT, ROOM_FIELD, NUMBER_OF_PEOPLE_FIELD, ROOMS_DATA_TABLE, MAX_PEOPLE_FIELD
 
 CONNECTION_CLOSE_MESSAGE = ''
 BACKLOG = 5
@@ -112,7 +112,8 @@ class FreeRoomsServer:
                 # Update the existing row with the new data.
                 else:
                     print("Updating room with new data, number of people is: {0}".format(data[NUMBER_OF_PEOPLE_FIELD]))
-                    self.free_rooms_db.update({NUMBER_OF_PEOPLE_FIELD: data[NUMBER_OF_PEOPLE_FIELD]},
+                    self.free_rooms_db.update({NUMBER_OF_PEOPLE_FIELD: data[NUMBER_OF_PEOPLE_FIELD],
+                                               MAX_PEOPLE_FIELD: data[MAX_PEOPLE_FIELD]},
                                               self.room.name == data[ROOM_FIELD])
         except socket.error:
             self.handle_connection_close(client_connection, address)
